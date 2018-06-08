@@ -1,0 +1,9 @@
+body{
+    background: red;
+    
+}
+.bg{
+    background: url("../img/tim.png");
+    width: 300px;
+    height: 400px;
+}

@@ -1,0 +1,12 @@
+body{
+    background: red;
+    
+}
+.bg{
+    background: url(74f04b01f927e362b78cc9046fddc7b8.png);
+    width: 300px;
+    height: 400px;
+}
+html body {
+  border: 1px solid #000; }
+

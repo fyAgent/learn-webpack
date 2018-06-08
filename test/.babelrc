@@ -1,0 +1,20 @@
+{
+    "presets": [
+        [
+            "babel-preset-env",
+            {
+                "target": {
+                    "browser": [
+                        ">1%"
+                    ]
+                }
+            }
+        ]
+    ],
+    "plugins": [
+        "transform-runtime"
+    ],
+    "ignore": [
+        "node_modules"
+    ]
+}
