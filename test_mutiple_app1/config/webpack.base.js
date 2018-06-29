@@ -13,7 +13,7 @@ getEntry(baseDir, "html").map(e => {
     htmlPluginArr.push(new HtmlPlugin({
         chunks: [e.name],
         template:e.dir+"/"+e.base,
-        filename:"../../"+e.base,
+        filename:e.dirname+"/"+e.base,
         minify:false,
     }));
 })
@@ -25,7 +25,7 @@ getEntry(baseDir, "js").map(e => {
 module.exports = {
     entry: entry,
     output: {
-        path: path.resolve(__dirname, "../dist/pages/assets/js/"),
+        path: path.resolve(__dirname, "../dist/pages/"),
         filename: "[name].js",
     },
     module: {
@@ -39,7 +39,7 @@ module.exports = {
                        
                         options: {
                             minimize: false,
-                            useRelativePath: true,
+                            useRelativePath: false,
                         }
                     },
 
@@ -84,8 +84,7 @@ module.exports = {
                             limit: 100000,
                             useRelativePath: false,
                             name: '[name].[ext]',
-                            publicPath: './assets/img/',
-                            outputPath:"../img/"
+                            publicPath: '../'
                         }
                     }
                 ]
@@ -103,7 +102,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
-            filename: "../css/[name][hash].css",
+            filename: "[name]/[name][hash].css",
             chunkFilename: "[id].css"
         }),
         // 多页面模板
