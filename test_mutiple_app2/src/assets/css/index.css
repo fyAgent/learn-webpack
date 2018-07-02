@@ -1,0 +1,24 @@
+html,body{
+    background: red;
+    color: #fff;
+    border-radius: 10px;
+   
+}
+#app{
+    transition: color .2s;
+    color: #000;
+    /* border-radius:1px solid #000;
+      background: linear-gradient(red, blue);
+      box-shadow: 1px 1px 1px #000; */
+}
+#app:hover{
+    color: red;
+    transform: scale(1.15);
+}
+input::placeholder{
+    color: gray;
+}
+
+@keyframes animationExample { from { width: 0; } to { width: 100%; } } 
+
+.animateThis { animation: animationExample 2s; display: flex; }

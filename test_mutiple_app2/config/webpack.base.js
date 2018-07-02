@@ -13,7 +13,7 @@ getEntry(baseDir, "html").map(e => {
     htmlPluginArr.push(new HtmlPlugin({
         chunks: [e.name],
         template:e.dir+"/"+e.base,
-        filename:"../"+e.dirname+"/"+e.base,
+        filename:"../../"+e.base,
         minify:false,
     }));
 })
@@ -21,10 +21,11 @@ getEntry(baseDir, "html").map(e => {
 getEntry(baseDir, "js").map(e => {
     entry[e.name] = e.dir + "/" + e.base;
 })
+
 module.exports = {
     entry: entry,
     output: {
-        path: path.resolve(__dirname, "../dist/pages/js/"),
+        path: path.resolve(__dirname, "../dist/pages/assets/js/"),
         filename: "[name].js",
     },
     module: {
@@ -83,7 +84,7 @@ module.exports = {
                             limit: 100000,
                             useRelativePath: false,
                             name: '[name].[ext]',
-                           
+                            publicPath: './assets/img/',
                             outputPath:"../img/"
                         }
                     }
@@ -92,18 +93,18 @@ module.exports = {
         ]
     },
     plugins: [
-        // // 打包之前清空dist文件夹
+        // 打包之前清空dist文件夹
         new CleanWebpackPlugin(["dist"], {
             root: path.resolve(__dirname, "../"),
-            // verbose: true,
-            // dry: false
+            verbose: true,
+            dry: false
         }),
         // 抽离css
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
-            filename: "../css/[name].css",
-            // chunkFilename: "[id].css"
+            filename: "../css/[name][hash].css",
+            chunkFilename: "[id].css"
         }),
         // 多页面模板
         ...htmlPluginArr
