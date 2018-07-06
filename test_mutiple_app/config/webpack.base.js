@@ -1,49 +1,30 @@
 const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
-const baseDir = path.resolve(__dirname, "../src/pages/");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const getEntry = require("./entry.config.js");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-const htmlPluginArr = [];
-const entry = {};
+const webpack = require("webpack");
+const { getEntry } = require("./utils.js");
+const baseDir = path.resolve(__dirname, "../src/pages/");//源页面存储目录
+const htmlPluginArr = [];//生成多页面htmlwebpackplugin配置
+const entry = {};//生成多入口配置
 
 getEntry(baseDir, "html").map(e => {
-    
+    const filename = e.dirname === "pages" ? e.base : e.dirname + "/" + e.base
     htmlPluginArr.push(new HtmlPlugin({
         chunks: [e.name],
-        template:e.dir+"/"+e.base,
-        filename:"../"+e.dirname+"/"+e.base,
-        minify:false,
+        template: e.dir + "/" + e.base,
+        filename: process.env.NODE_ENV === 'development' ? filename : "../../pages/" + filename,
+        minify: false,
     }));
-})
-
+});
 getEntry(baseDir, "js").map(e => {
     entry[e.name] = e.dir + "/" + e.base;
-})
+});
 module.exports = {
-    entry: entry,
-    output: {
-        path: path.resolve(__dirname, "../dist/pages/js/"),
-        filename: "[name].js",
-    },
+    entry,
     module: {
         rules: [
-            {
-                test: /\.html$/,
-                use: [
-                 
-                    {
-                        loader: "html-loader",
-                       
-                        options: {
-                            minimize: false,
-                            useRelativePath: true,
-                        }
-                    },
-
-                ]
-            },
             {
                 test: /\.js$/,
                 use: [
@@ -56,7 +37,6 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-
                     { loader: "css-loader" },
                     {
                         loader: 'postcss-loader',
@@ -68,6 +48,7 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     { loader: "css-loader" },
+
                     {
                         loader: 'postcss-loader',
                     },
@@ -80,11 +61,8 @@ module.exports = {
                     {
                         loader: "url-loader",
                         options: {
-                            limit: 100000,
+                            limit: 10000,
                             useRelativePath: false,
-                            name: '[name].[ext]',
-                           
-                            outputPath:"../img/"
                         }
                     }
                 ]
@@ -92,21 +70,32 @@ module.exports = {
         ]
     },
     plugins: [
-        // // 打包之前清空dist文件夹
+        /*打包之前清空dist文件夹*/
         new CleanWebpackPlugin(["dist"], {
             root: path.resolve(__dirname, "../"),
-            // verbose: true,
-            // dry: false
+            verbose: false,
+            dry: false
         }),
-        // 抽离css
+        /*移动静态资源*/
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, "../static/"),
+                to: path.resolve(__dirname, "../dist/static"),
+                toType: 'dir'
+            }
+        ]),
+        /*抽离css*/
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
-            filename: "../css/[name].css",
-            // chunkFilename: "[id].css"
+            filename: process.env.NODE_ENV == "development" ? "[name].css" : "../css/[name].css",
+            chunkFilename: "[id].css"
         }),
-        // 多页面模板
-        ...htmlPluginArr
+        /*热加载*/
+        new webpack.HotModuleReplacementPlugin(),
+        /*多页面模板*/
+        ...htmlPluginArr,
+        
     ],
 }
 

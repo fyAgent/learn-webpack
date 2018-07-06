@@ -1,1 +1,1 @@
-alert("buy")
+// alert("buy")

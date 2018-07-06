@@ -7,18 +7,14 @@ function getEntry(dir, ext) {
         },
         
     }).map(e => {
-        const dir =e.dir;
         let parseResult = path.parse(e);
         
-        parseResult.dirname = /\/(\w+)$/.exec(parseResult.dir)[1]
-       
-        
+        parseResult.dirname = /\/(\w+)$/.exec(parseResult.dir)[1];
         return parseResult;
     })
 }
+exports.getEntry = getEntry;
 
-
-module.exports = getEntry;
 
 
 
